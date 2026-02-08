@@ -16,6 +16,32 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
+set(IMGUI_VERSION 1.92.5)
+FetchContent_Declare(
+    imgui
+    URL https://github.com/ocornut/imgui/archive/refs/tags/v${IMGUI_VERSION}-docking.tar.gz
+)
+FetchContent_MakeAvailable(imgui)
+
+add_library(imgui STATIC 
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_demo.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
+
+target_include_directories(imgui 
+    PUBLIC 
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+    PRIVATE
+        ${imgui_SOURCE_DIR}
+)
+
+target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
+
 find_package(SDL3 REQUIRED)
 find_package(SDL3_ttf REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -29,7 +55,7 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})#add all source files
 
 add_subdirectory(libs/glad)
 
-target_link_libraries(${PROJECT_NAME} ${SDL3_LIBRARIES} ${OPENGL_LIBRARIES} glad glm::glm)
+target_link_libraries(${PROJECT_NAME} ${SDL3_LIBRARIES} ${OPENGL_LIBRARIES} glad glm::glm imgui)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
 

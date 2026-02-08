@@ -1,10 +1,12 @@
-
-
-
 #include <string>
 #include <SDL3/SDL.h>
 
 #include <SDL3/SDL_main.h>
+
+
+#include "imgui.h"
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_opengl3.h"
 
 #include "engine/Window.hpp"
 
@@ -27,6 +29,8 @@ int main( int argc, char* args[] )
 	{
 		while(SDL_PollEvent( &e ))
 		{
+			ImGui_ImplSDL3_ProcessEvent(&e);
+
 			if( e.type == SDL_EVENT_QUIT )
 			{
 				quit = true;
