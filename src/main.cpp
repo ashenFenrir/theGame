@@ -64,7 +64,7 @@ int main( int argc, char* args[] )
 		}
 		
 
-		glUseProgram(shader.id);
+		shader.use();
 		glBindVertexArray(VAO);
 		
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

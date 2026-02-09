@@ -8,11 +8,12 @@
 
 #include <glad/glad.h>
 
-Shader::Shader(const char* vshaderPath, const char* fshaderPath)
+Shader::Shader(const char* vshaderPath, const char* fshaderPath): ID(glCreateProgram())
 {
-	unsigned int vertexShader, fragmentShader, id;
+	const unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	const unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	int  success;
+	int success;
 	char infoLog[512];
 
 	std::string vshaderCode;
@@ -23,7 +24,6 @@ Shader::Shader(const char* vshaderPath, const char* fshaderPath)
 	const char *vertexShaderSource = vshaderCode.c_str();
 	const char *fragmentShaderSource = fshaderCode.c_str();
 
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 
 	glCompileShader(vertexShader);
@@ -34,8 +34,6 @@ Shader::Shader(const char* vshaderPath, const char* fshaderPath)
 		printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n %s \n", infoLog);
 	}
 
-
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	
 	glCompileShader(fragmentShader);
@@ -46,18 +44,16 @@ Shader::Shader(const char* vshaderPath, const char* fshaderPath)
 		printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n %s \n", infoLog);
 	}
 
+	glAttachShader(ID, vertexShader);
+	glAttachShader(ID, fragmentShader);
 
-	id = glCreateProgram();
-	glAttachShader(id, vertexShader);
-	glAttachShader(id, fragmentShader);
-
-	glLinkProgram(id);
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	glLinkProgram(ID);
+	glGetProgramiv(ID, GL_LINK_STATUS, &success);
 	if(!success) {
-		glGetProgramInfoLog(id, 512, NULL, infoLog);
+		glGetProgramInfoLog(ID, 512, NULL, infoLog);
 		printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n %s \n", infoLog);
 	}
-	glUseProgram(id);
+	glUseProgram(ID);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader); 
@@ -65,7 +61,7 @@ Shader::Shader(const char* vshaderPath, const char* fshaderPath)
 
 Shader::~Shader()
 {
-	glDeleteProgram(id);
+	glDeleteProgram(ID);
 }
 
 void Shader::load_shader_code(const char* vshaderPath, const char* fshaderPath, std::string& vcode, std::string& fcode)
@@ -97,4 +93,44 @@ void Shader::load_shader_code(const char* vshaderPath, const char* fshaderPath, 
 	}
 
 
+}
+
+void Shader::use()
+{
+	glUseProgram(ID);
+}
+
+void Shader::setUniform(const char* name, bool value)
+{
+	glUniform1i(glGetUniformLocation(ID, name), (int)value);
+}
+
+void Shader::setUniform(const char* name, int value)
+{
+	glUniform1i(glGetUniformLocation(ID, name), value);
+}
+
+void Shader::setUniform(const char* name, float value)
+{
+	glUniform1f(glGetUniformLocation(ID, name), value);
+}
+
+void Shader::setUniform(const char* name, glm::vec2 value)
+{
+	glUniform2f(glGetUniformLocation(ID, name), value.x, value.y);
+}
+
+void Shader::setUniform(const char* name, glm::vec3 value)
+{
+	glUniform3f(glGetUniformLocation(ID, name), value.x, value.y, value.z);
+}
+
+void Shader::setUniform(const char* name, glm::vec4 value)
+{
+	glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, value.w);
+}
+
+void Shader::setUniform(const char* name, glm::mat4 value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name), 4, GL_FALSE, glm::value_ptr(value));
 }
