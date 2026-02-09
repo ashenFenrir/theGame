@@ -132,5 +132,6 @@ void Shader::setUniform(const char* name, glm::vec4 value)
 
 void Shader::setUniform(const char* name, glm::mat4 value)
 {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name), 4, GL_FALSE, glm::value_ptr(value));
+	glGetUniformLocation(ID, name);
+	glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(value));
 }

@@ -1,6 +1,6 @@
 #include <string>
 
-#include <glm/vec3.hpp>
+#include <glm/ext.hpp>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -12,6 +12,7 @@
 
 #include "engine/Window.hpp"
 #include "engine/Shader.hpp"
+#include "engine/Camera.hpp"
 
 int main( int argc, char* args[] )
 {
@@ -35,6 +36,9 @@ int main( int argc, char* args[] )
 
 	};
 
+	mat4 model(1.0f);
+	model = translate(model, vec3(0.5f,0,0));
+
 	unsigned int VBO, VAO;
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
@@ -48,8 +52,9 @@ int main( int argc, char* args[] )
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-
 	Shader shader("res/shaders/main.glslv", "res/shaders/main.glslf");
+
+	Camera camera(vec3(0,0,2), radians(90.0f));
 
 	while(!quit)
 	{
@@ -63,7 +68,11 @@ int main( int argc, char* args[] )
 			}
 		}
 		
-
+		camera.rotate(0,0,0.01);
+		
+		shader.setUniform("model", model);
+		shader.setUniform("projview", camera.getProjection()*camera.getView());
+		
 		shader.use();
 		glBindVertexArray(VAO);
 		
