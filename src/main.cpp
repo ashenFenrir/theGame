@@ -49,7 +49,7 @@ int main( int argc, char* args[] )
 	glEnableVertexAttribArray(0);
 
 
-	Shader shader;
+	Shader shader("res/shaders/main.glslv", "res/shaders/main.glslf");
 
 	while(!quit)
 	{

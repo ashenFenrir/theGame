@@ -1,12 +1,50 @@
+#include <exception>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 #include <glad/glad.h>
-#include <cstdio>
+
 
 
 class Shader
 {
+    static void load_shader(std::string vertex_shader_file, std::string fragment_shader_file, std::string& vcode, std::string& fcode)
+    {
+
+
+        // Reading Files
+        std::string vertexCode;
+        std::string fragmentCode;
+        std::ifstream vShaderFile;
+        std::ifstream fShaderFile;
+        
+        vShaderFile.exceptions(std::ifstream::badbit);
+        fShaderFile.exceptions(std::ifstream::badbit);
+        try {
+            vShaderFile.open(vertex_shader_file);
+            fShaderFile.open(fragment_shader_file);
+            std::stringstream vShaderStream, fShaderStream;
+        
+            vShaderStream << vShaderFile.rdbuf();
+            fShaderStream << fShaderFile.rdbuf();
+        
+            vShaderFile.close();
+            fShaderFile.close();
+        
+            vcode = vShaderStream.str();
+            fcode = fShaderStream.str();
+        }
+        catch(std::ifstream::failure& e) {
+            std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+        }
+
+
+    }
 public:
     unsigned int id;
-    Shader()
+    Shader(const char* vcode, const char* fcode)
     {
         //create vertex buffer object(VBO) and vertex array object(VBO)
         unsigned int vertexShader, fragmentShader, id;
@@ -15,25 +53,15 @@ public:
         int  success;
         char infoLog[512];
 
+        std::string vshadercode;
+        std::string fshadercode;
+
+        load_shader(vcode, fcode, vshadercode, fshadercode);
 
         //the vertex shader code
-        const char *vertexShaderSource = "#version 330 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-            "}\0";
-
+        const char *vertexShaderSource = vshadercode.c_str();
         //the vertex shader code
-        const char *fragmentShaderSource = "#version 330 core\n"
-            "out vec4 FragColor;\n"
-            "void main()\n"
-            "{\n"
-            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-            "}\0";
-
-
-
+        const char *fragmentShaderSource = fshadercode.c_str();
 
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
