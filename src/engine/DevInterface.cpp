@@ -6,7 +6,7 @@ ImGuiIO* DevInterface::io = nullptr;
 
 bool DevInterface::show_demo_window = true;
 bool DevInterface::show_another_window = false;
-
+bool DevInterface::wireframe = false;
 
 bool DevInterface::init(){
     // Setup Dear ImGui context
@@ -63,7 +63,9 @@ void DevInterface::render()
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
         ImGui::Checkbox("Demo Window", &DevInterface::show_demo_window);      // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &DevInterface::show_another_window);
+        ImGui::Checkbox("wireframe mode", &wireframe);
 
+	    
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::ColorEdit3("clear color", (float*)&Window::clear_color); // Edit 3 floats representing a color
 

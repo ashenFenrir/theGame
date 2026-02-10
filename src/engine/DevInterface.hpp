@@ -14,6 +14,8 @@ public:
     static bool show_demo_window;
     static bool show_another_window;
 
+    static bool wireframe;
+
     DevInterface() = default;
     
     static bool init();

@@ -66,7 +66,7 @@ void Events::pullEvents()
     
 	while(SDL_PollEvent( &e ))
 	{
-
+        if(!SDL_GetWindowRelativeMouseMode(Window::window))
         DevInterface::processEvent(&e);
 
         switch (e.type) {

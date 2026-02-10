@@ -10,6 +10,7 @@
 #include "engine/Shader.hpp"
 #include "engine/Camera.hpp"
 #include "engine/Events.hpp"
+#include "engine/DevInterface.hpp"
 
 int main( int argc, char* args[] )
 {
@@ -111,10 +112,12 @@ int main( int argc, char* args[] )
 			camY += -Events::deltaY / Window::HEIGHT * 10;
 			camX += -Events::deltaX / Window::WIDTH * 10;
 
-			if (camY < -radians(89.0f)){
+			if (camY < -radians(89.0f))
+			{
 				camY = -radians(89.0f);
 			}
-			if (camY > radians(89.0f)){
+			if (camY > radians(89.0f))
+			{
 				camY = radians(89.0f);
 			}
 
@@ -125,6 +128,8 @@ int main( int argc, char* args[] )
 		shader.setUniform("model", model);
 		shader.setUniform("projview", camera.getProjection()*camera.getView());
 		
+		glPolygonMode(GL_FRONT_AND_BACK, DevInterface::wireframe?GL_LINE:GL_FILL);
+
 		shader.use();
 		glBindVertexArray(VAO);
 		
