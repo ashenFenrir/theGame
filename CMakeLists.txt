@@ -45,6 +45,7 @@ target_include_directories(imgui INTERFACE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DI
 find_package(SDL3 REQUIRED)
 find_package(SDL3_ttf REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(PNG)
 
 include_directories(${SDL3_INCLUDE_DIRS})
 
@@ -55,7 +56,7 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})#add all source files
 
 add_subdirectory(libs/glad)
 
-target_link_libraries(${PROJECT_NAME} ${SDL3_LIBRARIES} ${OPENGL_LIBRARIES} glad glm::glm imgui)
+target_link_libraries(${PROJECT_NAME} ${SDL3_LIBRARIES} ${OPENGL_LIBRARIES} glad glm::glm imgui png)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
 

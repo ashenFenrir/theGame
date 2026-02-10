@@ -68,10 +68,9 @@ bool Window::init()
 	// Use v-sync
 	SDL_GL_SetSwapInterval(-1);
 	
-	// Disable depth test and face culling.
-	glDisable(GL_DEPTH_TEST);
+
 	glDisable(GL_CULL_FACE);
-	
+	glEnable(GL_DEPTH_TEST);
 	
 	// Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -124,7 +123,7 @@ void Window::update()
 	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 	DevInterface::render();
 	SDL_GL_SwapWindow(window);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
 

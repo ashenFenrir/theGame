@@ -10,7 +10,9 @@
 #include "engine/Shader.hpp"
 #include "engine/Camera.hpp"
 #include "engine/Events.hpp"
+#include "engine/Texture.hpp"
 #include "engine/DevInterface.hpp"
+#include "engine/loaders/png_loader.hpp"
 
 int main( int argc, char* args[] )
 {
@@ -28,14 +30,65 @@ int main( int argc, char* args[] )
 
 
 
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f,
+	
+float vertices[] = {
+    // Front face
+    // x     y     z     u    v
+    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  // bottom-left
+     0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  // bottom-right
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,  // top-right
+     0.5f,  0.5f,  0.5f, 1.0f, 1.0f,  // top-right (again)
+    -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,  // top-left
+    -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  // bottom-left (again)
+    
+    // Back face
+    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // bottom-left
+    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f,  // top-left
+     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  // top-right
+     0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  // top-right (again)
+     0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  // bottom-right
+    -0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // bottom-left (again)
+    
+    // Left face
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,  // top-front
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  // top-back
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  // bottom-back
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  // bottom-back (again)
+    -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  // bottom-front
+    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,  // top-front (again)
+    
+    // Right face
+     0.5f,  0.5f,  0.5f, 0.0f, 1.0f,  // top-front
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // bottom-back
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,  // top-back
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // bottom-back (again)
+     0.5f,  0.5f,  0.5f, 0.0f, 1.0f,  // top-front (again)
+     0.5f, -0.5f,  0.5f, 0.0f, 0.0f,  // bottom-front
+    
+    // Top face
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  // back-left
+     0.5f,  0.5f, -0.5f, 1.0f, 1.0f,  // back-right
+     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  // front-right
+     0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  // front-right (again)
+    -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,  // front-left
+    -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,  // back-left (again)
+    
+    // Bottom face
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  // back-left
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f,  // front-right
+     0.5f, -0.5f, -0.5f, 1.0f, 0.0f,  // back-right
+     0.5f, -0.5f,  0.5f, 1.0f, 1.0f,  // front-right (again)
+    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,  // back-left (again)
+    -0.5f, -0.5f,  0.5f, 0.0f, 1.0f   // front-left
+};
 
-	};
-
+	Texture* texture = load_texture("res/prototype_tex/green/green_texture3_text.png");
+	if (texture == nullptr){
+		SDL_Log("failed to load texture");
+		//delete shader;
+		Window::close();
+		return 1;
+	}
 	mat4 model(1.0f);
 	model = translate(model, vec3(0.5f,0,0));
 
@@ -49,8 +102,11 @@ int main( int argc, char* args[] )
 	//copy data into buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	// 3. then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 
 	Shader shader("res/shaders/main.glslv", "res/shaders/main.glslf");
 
@@ -131,9 +187,10 @@ int main( int argc, char* args[] )
 		glPolygonMode(GL_FRONT_AND_BACK, DevInterface::wireframe?GL_LINE:GL_FILL);
 
 		shader.use();
+		texture->bind();
 		glBindVertexArray(VAO);
 		
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays(GL_TRIANGLES, 0, 6*6);
 		Window::update();
 	}
 	

@@ -97,9 +97,7 @@ void Events::pullEvents()
             Events::_frames[e.button.button+_MOUSE_BUTTONS] = Events::_current;
             break;
 
-        case SDL_EVENT_MOUSE_MOTION: 
-            SDL_Log("e.motion.rel: %fx%f", e.motion.xrel, e.motion.yrel);
-
+        case SDL_EVENT_MOUSE_MOTION:
             Events::deltaX = e.motion.xrel;
             Events::deltaY = e.motion.yrel;
             Events::_x = e.motion.x;

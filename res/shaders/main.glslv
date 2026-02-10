@@ -1,10 +1,16 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec3 vPos;
+layout (location = 1) in vec2 v_texCoord;
 
 uniform mat4 model;
 uniform mat4 projview;
 
+out vec4 a_color;
+out vec2 a_texCoord;
+
 void main()
 {
-    gl_Position = projview * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    a_color = vec4(1.0, 1.0, 1.0, 1.0);
+    a_texCoord = v_texCoord;
+    gl_Position = projview * model * vec4(vPos, 1.0);
 }
