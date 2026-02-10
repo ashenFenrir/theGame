@@ -17,8 +17,6 @@ float Events::deltaX = 0.0f;
 float Events::deltaY = 0.0f;
 float Events::_x = 0.0f;
 float Events::_y = 0.0f;
-bool Events::_cursor_locked = false;
-bool Events::_cursor_started = false;
 bool Events::_quit = false;
 
 
@@ -56,10 +54,7 @@ bool Events::jclicked(int button){
 	return _keys[index] && _frames[index] == _current;
 }
 
-// void Events::toogleCursor(){
-// 	_cursor_locked = !_cursor_locked;
-// 	Window::setCursorMode(_cursor_locked ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
-// }
+
 
 SDL_Event e;
 
@@ -68,7 +63,7 @@ void Events::pullEvents()
 	_current++;
 	deltaX = 0.0f;
 	deltaY = 0.0f;
-
+    
 	while(SDL_PollEvent( &e ))
 	{
 
@@ -102,10 +97,12 @@ void Events::pullEvents()
             Events::_frames[e.button.button+_MOUSE_BUTTONS] = Events::_current;
             break;
 
-        case SDL_EVENT_MOUSE_MOTION:
-            Events::deltaX = e.motion.x - Events::_x;
+        case SDL_EVENT_MOUSE_MOTION: 
+            SDL_Log("e.motion.rel: %fx%f", e.motion.xrel, e.motion.yrel);
+
+            Events::deltaX = e.motion.xrel;
+            Events::deltaY = e.motion.yrel;
             Events::_x = e.motion.x;
-            Events::deltaY = e.motion.y - Events::_y;
             Events::_y = e.motion.y;
             break;
             

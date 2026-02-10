@@ -27,5 +27,8 @@ class Window
 	static void close();
 
 	static void update();
+
+	static void toogleCursor();
+
 };
 

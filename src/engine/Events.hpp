@@ -12,8 +12,6 @@ public:
 	static float deltaY;
 	static float _x;
 	static float _y;
-	static bool _cursor_locked;
-	static bool _cursor_started;
     static bool _quit;
 
 	static bool init();
@@ -24,10 +22,6 @@ public:
 
 	static bool clicked(int button);
 	static bool jclicked(int button);
-
-	//static void toogleCursor();
-
-    static bool isQuit();
 };
 
 #endif /* WINDOW_EVENTS_H_ */

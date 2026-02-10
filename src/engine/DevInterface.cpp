@@ -75,6 +75,8 @@ void DevInterface::render()
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / DevInterface::io->Framerate, DevInterface::io->Framerate);
 
         ImGui::Text("mouse pos: %.1fx%.1f", Events::_x, Events::_y);
+        ImGui::Text("mouse delta: %.5fx%.5f", Events::deltaX, Events::deltaY);
+        ImGui::Text("cursor shown: %s", !SDL_GetWindowRelativeMouseMode(Window::window)?"true":"false");
         ImGui::End();
     }
 

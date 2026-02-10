@@ -23,6 +23,10 @@ bool Window::init()
 		SDL_Log( "SDL could not initialize! SDL error: %s\n", SDL_GetError() );
 		return false;
 	}
+
+	//note: if not enabled, the mouse in relative mode will move only by absolute values(idk why)
+	SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE, "1");
+
 	SDL_GL_LoadLibrary(NULL);
 
 	// Request an OpenGL 4.5 context (should be core)
@@ -100,6 +104,10 @@ SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
 
+	//note: can be enabled for debuging
+	//SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1");
+
+
 	//init imgui interface
 	DevInterface::init();
 
@@ -111,22 +119,13 @@ SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 
 void Window::update()
-{
-	
-		glViewport(0, 0, WIDTH, HEIGHT);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-    	DevInterface::render();
-		SDL_GL_SwapWindow(window);
-        glClear(GL_COLOR_BUFFER_BIT);
+{	
+	glViewport(0, 0, WIDTH, HEIGHT);
+	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+	DevInterface::render();
+	SDL_GL_SwapWindow(window);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	// SDL_GL_SwapWindow(Window::window);
-	// SDL_GetWindowSize(Window::window, &Window::WIDTH, &Window::HEIGHT);
-	// glViewport(0, 0, Window::WIDTH, Window::HEIGHT);
-	// glClear(GL_COLOR_BUFFER_BIT);
-
-
-
-	
 }
 
 void Window::close()
@@ -137,4 +136,9 @@ void Window::close()
 	Window::context = nullptr;
 
 	SDL_Quit();
+}
+
+void Window::toogleCursor(){
+	
+	SDL_SetWindowRelativeMouseMode(window, !SDL_GetWindowRelativeMouseMode(window));
 }
