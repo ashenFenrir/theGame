@@ -19,5 +19,6 @@ public:
     static bool init();
     static void update();
     static void render();
+    static void processEvent(const SDL_Event *event);
 };
 

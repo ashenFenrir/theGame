@@ -11,8 +11,8 @@ glm::vec4 Window::clear_color(0.0f, 0.5f, 1.0f, 1.0f);
 
 float Window::main_scale;
 
-int Window::WIDTH = 800;
-int Window::HEIGHT = 600;
+int Window::WIDTH = 1024;
+int Window::HEIGHT = 720;
 
 char* Window::glsl_version;
 

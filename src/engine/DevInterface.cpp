@@ -1,6 +1,6 @@
 #include "Window.hpp"
 #include "DevInterface.hpp"
-
+#include "Events.hpp"
 
 ImGuiIO* DevInterface::io = nullptr;
 
@@ -74,7 +74,7 @@ void DevInterface::render()
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / DevInterface::io->Framerate, DevInterface::io->Framerate);
 
-        ImGui::Text("LOG: %f %f %f %f", Window::clear_color.x, Window::clear_color.y, Window::clear_color.z, Window::clear_color.w);
+        ImGui::Text("mouse pos: %.1fx%.1f", Events::_x, Events::_y);
         ImGui::End();
     }
 
@@ -94,4 +94,10 @@ void DevInterface::render()
     
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+//note: for performance, processEvent function can be reduced to a pointer to ImGui_ImplSDL3_ProcessEvent function
+void DevInterface::processEvent(const SDL_Event *event)
+{
+	ImGui_ImplSDL3_ProcessEvent(event);
 }
